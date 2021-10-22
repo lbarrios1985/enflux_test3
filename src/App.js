@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import Exercise from "./components/Exercise1";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+  const { isLoading, isAuthenticated, error, loginWithRedirect } = useAuth0();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Oops... {error.message}</div>;
+  }
+
+  if (isAuthenticated) {
+    return <Exercise />;
+  } else {
+    return (
+      <Container component="main">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          <Button onClick={loginWithRedirect} variant="contained">
+            Log in
+          </Button>
+        </div>
+      </Container>
+    );
+  }
 }
 
 export default App;
